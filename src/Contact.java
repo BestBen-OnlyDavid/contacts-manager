@@ -9,10 +9,10 @@ public class Contact {
     }
 
     public String formatName(){
-        return String.format("%-10s |", this.getContactName());
+        return String.format("| %-9s |", this.getContactName());
     }
     public String formatNumber(){
-        return String.format(" %-10s", this.getPhoneNumber());
+        return String.format(" %-12s |", this.getPhoneNumber());
     }
 
     public String getContactName() {
