@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ContactManager {
 
@@ -42,6 +43,47 @@ public class ContactManager {
             throw new RuntimeException(e);
         }
     }
+
+    public ArrayList<Contact> addItemToList(ArrayList<Contact> curList, String name, String number) {
+        Contact contact = new Contact(name, number);
+        curList.add(contact);
+        return curList;
+
+    }
+
+    public String prompt(String prompt) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+
+    public void searchContacts(ArrayList<Contact> list,String searchString) {
+        int count = 0;
+        ArrayList<String> resultList = new ArrayList<>();
+        for (Contact c : list) {
+            if (c.getContactName().contains(searchString)){
+                resultList.add((c.getContactName() + " | " + c.getPhoneNumber()));
+                count++;
+            }
+        }
+        if (count == 0) {
+            for (Contact c : list) {
+                if (c.getPhoneNumber().contains(searchString)){
+                    resultList.add((c.getContactName() + " | " + c.getPhoneNumber()));
+                    count++;
+                }
+            }
+        }
+        if (count == 0) {
+            System.out.println("No results found");
+        }
+        for (String r : resultList) {
+            System.out.println(r);
+        }
+    }
+
+
+
 
 //    public static void writeToFile(String filePath, ArrayList<Contact> contacts){
 //        if (!Files.exists(Paths.get(filePath))){
