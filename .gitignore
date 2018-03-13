@@ -1,4 +1,9 @@
+#ignore intellij bah log knee
 *.idea
 *.iml
 
+# Ignore java output
 out/*
+
+# Ignore the contacts.txt
+*.txt
