@@ -12,19 +12,50 @@ public class ContactManager {
 
     ArrayList<Contact> contactList = new ArrayList<>();
 
-    public void showOptions() {
-        Scanner scanner = new Scanner(System.in);
+    public void showOptions(ArrayList<Contact> contacts) {
+        System.out.println("");
         System.out.println("Contact Manager Prime");
         System.out.println("0 - View All Contacts");
         System.out.println("1 - Add new Contact");
         System.out.println("2 - Search Contact");
         System.out.println("3 - Delete Contact");
         System.out.println("/* - Exit");
-        scanner.nextInt();
+        handleInput(prompt("Enter your choice: "), contacts, "contacts.txt");
 
         //Handle the input
         //switch statements that call other functions
     }
+
+    public void handleInput(String choice, ArrayList<Contact> curlist, String filename) {
+        boolean quit;
+        do {
+            quit = false;
+            switch (choice) {
+                case "0":
+                    showAll(curlist);
+                    break;
+                case "1":
+                    addItemToList(curlist, prompt("Enter name: "), prompt("Enter number: "));
+                    break;
+                case "2":
+                    searchContacts(curlist, prompt("Search string: "));
+                    break;
+                case "3":
+                    deleteContact(curlist, prompt("Delete item: "), filename);
+                    break;
+                case "4":
+                    System.out.println("Goodbye!");
+                    System.exit(0);
+                    quit = true;
+                    break;
+                default:
+                    break;
+            }
+            showOptions(curlist);
+        } while (quit);
+    }
+
+
 
 
     public void showAll(ArrayList<Contact> contacts) {
@@ -35,6 +66,7 @@ public class ContactManager {
     }
 
     public void printTableHead() {
+        System.out.println("");
         System.out.println("----------------------------");
         System.out.printf("%-10s | %-10s \n", "Name", "Phone Number");
         System.out.println("----------------------------");
@@ -61,11 +93,11 @@ public class ContactManager {
         }
     }
 
-    public void deleteContact(ArrayList<Contact> keepList, ArrayList<Contact> deleteList, String fileName){
-        keepList.removeAll(deleteList);
-        writeContactsToFile(keepList, fileName);
-        showAll(keepList);
-    }
+//    public void deleteContact(ArrayList<Contact> keepList, ArrayList<Contact> deleteList, String fileName){
+//        keepList.removeAll(deleteList);
+//        writeContactsToFile(keepList, fileName);
+//        showAll(keepList);
+//    }
 
     public ArrayList<Contact> addItemToList(ArrayList<Contact> curList, String name, String number) {
         Contact contact = new Contact(name, number);
@@ -124,6 +156,18 @@ public class ContactManager {
             System.out.println(t.getContactName());
         }
         return resultContacts;
+    }
+
+    public void deleteContact(ArrayList<Contact> contacts, String searchItem, String filename) {
+        ArrayList<Contact> deleteThis = searchContacts(contacts, searchItem);
+        printTableHead();
+        for (Contact d : deleteThis) {
+            System.out.println(d.formatName() + d.formatNumber());
+        }
+        if (prompt("Delete All? [y/n]").equalsIgnoreCase("y")) {
+            contacts.removeAll(deleteThis);
+            writeContactsToFile(contacts, filename);
+        }
     }
 
 
