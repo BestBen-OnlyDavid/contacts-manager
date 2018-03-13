@@ -19,13 +19,16 @@ public class ContactsTest {
         //#######PRE POPULATED#######//
 
 
+
+
+
 //        cm.addItemToList(cm.contactList, cm.prompt("Enter name: "), cm.prompt("Enter number: "));
 //        cm.addItemToList(cm.contactList, cm.prompt("Enter name: "), cm.prompt("Enter number: "));
 
 
         cm.writeContactsToFile(cm.contactList, "contacts.txt");
 
-        cm.showOptions();
+        cm.showOptions(cm.contactList);
 
 //        cm.showAll(cm.contactList);
     }
