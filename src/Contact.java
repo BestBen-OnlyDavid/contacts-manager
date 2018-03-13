@@ -8,6 +8,13 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
+    public String formatName(){
+        return String.format("%-10s |", this.getContactName());
+    }
+    public String formatNumber(){
+        return String.format(" %-10s", this.getPhoneNumber());
+    }
+
     public String getContactName() {
         return contactName;
     }
