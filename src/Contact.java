@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Contact {
 
     private String contactName;
@@ -9,10 +11,18 @@ public class Contact {
     }
 
     public String formatName(){
-        return String.format("| %-9s |", this.getContactName());
+        String name = this.getContactName();
+        String firstLetter = name.substring(0,1);
+        String newName = firstLetter.toUpperCase() + name.substring(1);
+        return String.format("| %-9s |", newName);
     }
     public String formatNumber(){
-        return String.format(" %-12s |", this.getPhoneNumber());
+        String number = this.getPhoneNumber();
+        String areaCode = number.substring(0, 3);
+        String prefix = number.substring(3, 6);
+        String lineNumber = number.substring(6);
+        String newString = "(" + areaCode + ")-" + prefix + "-" + lineNumber;
+        return String.format(" %-15s |", newString);
     }
 
     public String getContactName() {
