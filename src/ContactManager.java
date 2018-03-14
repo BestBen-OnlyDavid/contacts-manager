@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,19 +13,43 @@ public class ContactManager {
 
     public void printTableHead() {
         System.out.println("");
-        System.out.println("+--------------------------+");
-        System.out.printf("| %-10s| %-10s %-1s\n", "Name", "Phone Number",  "|");
-        System.out.println("+--------------------------+");
+        System.out.println("+-----------------------------+");
+        System.out.printf("| %-10s| %-10s %4s\n", "Name", "Phone Number",  "|");
+        System.out.println("+-----------------------------+");
     }
 
     public void printTableFooter(){
-        System.out.println("+--------------------------+");
+        System.out.println("+-----------------------------+");
+    }
+
+    public void showAll(ArrayList<Contact> contacts) {
+        printTableHead();
+        for (Contact contact : contacts) {
+            System.out.println(contact.formatName() + contact.formatNumber());
+        }
+        printTableFooter();
     }
 
     public String prompt(String prompt) {
         Scanner scanner = new Scanner(System.in);
         System.out.print(prompt);
         return scanner.nextLine();
+    }
+
+    public String numberPrompt(String prompt){
+        Scanner scanner = new Scanner(System.in);
+        String userInput;
+        do {
+            System.out.print(prompt);
+            userInput = scanner.nextLine();
+            if (userInput.length() != 10) {
+                System.out.println((char) 27 + "[33m");
+                System.out.println("Please Enter a 10 digit number: ");
+                System.out.println((char) 27 + "[39m");
+            }
+        } while(userInput.length() != 10);
+
+        return userInput;
     }
 
     public void showOptions(ArrayList<Contact> contacts) {
@@ -36,7 +59,7 @@ public class ContactManager {
         System.out.println("1 - Add new Contact");
         System.out.println("2 - Search Contact");
         System.out.println("3 - Delete Contact");
-        System.out.println("/* - Exit");
+        System.out.println("4 - Exit");
         handleInput(prompt("Enter your choice: "), contacts, "contacts.txt");
     }
 
@@ -49,7 +72,7 @@ public class ContactManager {
                     showAll(curList);
                     break;
                 case "1":
-                    addItemToList(curList, prompt("Enter name: "), prompt("Enter number: "), filename);
+                    addItemToList(curList, prompt("Enter name: "), numberPrompt("Enter 10 Digit Number: "), filename);
                     break;
                 case "2":
                     searchContacts(curList, prompt("Search string: "));
@@ -126,13 +149,7 @@ public class ContactManager {
         }
     }
 
-    public void showAll(ArrayList<Contact> contacts) {
-        printTableHead();
-        for (Contact contact : contacts) {
-            System.out.println(contact.formatName() + contact.formatNumber());
-        }
-        printTableFooter();
-    }
+
 
     public void addItemToList(ArrayList<Contact> curList, String name, String number, String fileName) {
         Contact contact = new Contact(name, number);
@@ -152,7 +169,7 @@ public class ContactManager {
         ArrayList<Contact> resultContacts = new ArrayList<>();
         ArrayList<String> resultList = new ArrayList<>();
         for (Contact c : list) {
-            if (c.getContactName().contains(searchString)){
+            if (c.getContactName().toLowerCase().contains(searchString.toLowerCase())){
                 resultList.add(c.formatName() + c.formatNumber());
                 resultContacts.add(c);
                 count++;
@@ -171,6 +188,7 @@ public class ContactManager {
             System.out.println("No results found");
         }
         System.out.println((char)27 + "[32m");
+        System.out.print(".:Contacts Found:.");
         printTableHead();
         for (String r : resultList) {
             System.out.println(r);
@@ -183,15 +201,15 @@ public class ContactManager {
     public void deleteContact(ArrayList<Contact> contacts, String searchItem, String filename) {
         ArrayList<Contact> deleteThis = searchContacts(contacts, searchItem);
 
-        System.out.println("\n" + (char)27 + "[31m" + "These Contacts Will Be Deleted");
+        System.out.print("\n" + (char)27 + "[31m" + ".:Contacts Pending Delete:.");
         printTableHead();
         for (Contact d : deleteThis) {
             System.out.print(d.formatName() + d.formatNumber() + "\n");
 //            System.out.println(d.formatName() + d.formatNumber() + "\n::::Pending Delete::::");
         }
         printTableFooter();
-
-        if (prompt("Delete All? [y/n]").equalsIgnoreCase("y")) {
+        System.out.println();
+        if (prompt("Delete All Results? [y/n]").equalsIgnoreCase("y")) {
             contacts.removeAll(deleteThis);
             writeContactsToFile(contacts, filename, false);
         }
